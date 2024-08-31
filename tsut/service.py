@@ -3,6 +3,7 @@ import os
 import glob
 from telegram import Bot
 import logging
+import twitter_interaction
 
 class TSUT:
     def __init__(self, telegram_bot_token: str, telegram_channel_id: str, space_link: str, cookie_file: str):
@@ -11,6 +12,11 @@ class TSUT:
         self.space_link = space_link
         self.cookie_file = cookie_file
 
+    async def process_link(self):
+        if "x.com/i/spaces" in self.space_link:
+            await self.download_audio()
+        else:
+            self.interact_with_twitter()
 
     async def upload_to_telegram(self, directory="."):
         bot = Bot(self.telegram_bot_token)
@@ -58,3 +64,7 @@ class TSUT:
             logging.error(f"Error splitting audio: {stderr.decode()}")
         else:
             logging.info(f"Splitting {newname} has been finished...")
+
+    def interact_with_twitter(self):
+       self.space_link = twitter_interaction.interact_with_tweet(self.space_link, self.cookie_file)
+       self.download_audio()

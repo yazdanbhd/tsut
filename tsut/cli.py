@@ -61,7 +61,7 @@ async def perform():
         
 
     t = TSUT(args.bot_token, channel_id, args.link, args.cookie_file)
-    await t.download_audio()
+    await t.process_link()
     await t.upload_to_telegram()
 
 def run():
